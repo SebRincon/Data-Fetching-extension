@@ -1,5 +1,4 @@
 chrome.runtime.onInstalled.addListener((details) => {
-  console.log(details);
   chrome.contextMenus.create({
     title: "Test Context Menu",
     id: "contextMenu1",
@@ -41,6 +40,11 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 console.log("Background is Running");
 
-chrome.storage.local.get(["text"], (res) => {
-  console.log(res);
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  console.log(msg);
+  console.log(sender);
+  sendResponse("This is a return call ");
+
+  //? This can be used to send a message backwards
+  chrome.tabs.sendMessage(sender.tab.id, "Got your message");
 });
