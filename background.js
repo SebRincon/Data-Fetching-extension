@@ -40,3 +40,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 });
 
 console.log("Background is Running");
+
+chrome.storage.local.get(["text"], (res) => {
+  console.log(res);
+});
