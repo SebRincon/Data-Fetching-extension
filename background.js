@@ -1,4 +1,10 @@
 chrome.runtime.onInstalled.addListener((details) => {
+  chrome.storage.local.set({
+    shows: [],
+  });
+});
+
+chrome.runtime.onInstalled.addListener((details) => {
   chrome.contextMenus.create({
     title: "Test Context Menu",
     id: "contextMenu1",
@@ -22,6 +28,15 @@ chrome.runtime.onInstalled.addListener((details) => {
     contexts: ["selection"],
   });
 
+  // Child menu 2
+  chrome.contextMenus.create({
+    title: "MAZE Search",
+    id: "contextMenu4",
+    parentId: "contextMenu1",
+    // Context Menu Show up on right click of page or menu selection
+    contexts: ["selection"],
+  });
+
   chrome.contextMenus.onClicked.addListener((event) => {
     // Check if menu 2 or menu 3 has been clicked
     if (event.menuItemId === "contextMenu2") {
@@ -34,6 +49,10 @@ chrome.runtime.onInstalled.addListener((details) => {
       chrome.tabs.create({
         url: `https://www.imdb.com/find/?q=${event.selectionText}&ref_=nv_sr_sm`,
       });
+    } else if (event.menuItemId === "contextMenu4") {
+      fetch(`https://api.tvmaze.com/search/shows?q=${event.selectionText}`)
+        .then((res) => res.json())
+        .then((data) => chrome.storage.local.set({ shows: data }));
     }
   });
 });
