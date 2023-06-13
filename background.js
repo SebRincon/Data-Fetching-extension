@@ -28,10 +28,19 @@ chrome.runtime.onInstalled.addListener((details) => {
     contexts: ["selection"],
   });
 
-  // Child menu 2
+  // Child menu 3
   chrome.contextMenus.create({
     title: "MAZE Search",
     id: "contextMenu4",
+    parentId: "contextMenu1",
+    // Context Menu Show up on right click of page or menu selection
+    contexts: ["selection"],
+  });
+
+  // Child menu 4
+  chrome.contextMenus.create({
+    title: "Text to Speach",
+    id: "contextMenu5",
     parentId: "contextMenu1",
     // Context Menu Show up on right click of page or menu selection
     contexts: ["selection"],
@@ -53,6 +62,8 @@ chrome.runtime.onInstalled.addListener((details) => {
       fetch(`https://api.tvmaze.com/search/shows?q=${event.selectionText}`)
         .then((res) => res.json())
         .then((data) => chrome.storage.local.set({ shows: data }));
+    } else if (event.menuItemId === "contextMenu5") {
+      chrome.tts.speak(event.selectionText);
     }
   });
 });
